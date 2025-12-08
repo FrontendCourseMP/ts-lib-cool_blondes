@@ -1,10 +1,4 @@
-import { FormValidatorImpl } from "./validators/FormValidatorImpl";
-
-// Подключите вашу фабрику
-const formFactory = (formElement: HTMLFormElement | null) => {
-  if (!formElement) return undefined;
-  return new FormValidatorImpl(formElement);
-};
+import { formFactory } from "./validators/FormFactory"
 
 document.addEventListener("DOMContentLoaded", () => {
   const formElement = document.getElementById("userForm") as HTMLFormElement | null;
