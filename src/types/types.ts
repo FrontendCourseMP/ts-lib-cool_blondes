@@ -1,46 +1,41 @@
-export type sum = (a: number, b: number) => number
-
-export type FormFactory = (formElement: HTMLFormElement) => FormValidator;
+// types.ts
+export interface ValidationResult {
+  isValid: boolean;
+  errors: Record<string, string>;
+}
 
 export interface FormValidator {
   field(fieldName: string): FieldValidator;
-  validate(): boolean;
+  validate(): ValidationResult;
+  validateField(fieldName: string): string | null;
 }
 
 export interface FieldValidator {
-    string(): StringValidator;
-    number(): NumberValidator;
-    array(): ArrayValidator;
-    required(message?: string): FieldValidator;
-}    
+  string(): StringValidator;
+  number(): NumberValidator;
+}
 
+export interface TypedValidator {
+  required(message?: string): this;
+  validate(rawValue: string): string | null;
+}
 
-export interface StringValidator {
-    min(length: number, message?: string): StringValidator;
-    max(length: number, message?: string): StringValidator;
-    required(message?: string): StringValidator;
-    email(message?: string): StringValidator;
-    url(message?: string): StringValidator;
-}    
+export interface StringValidator extends TypedValidator {
+  min(length: number, message?: string): this;
+  max(length: number, message?: string): this;
+  email(message?: string): this;
+  url(message?: string): this;
+  pattern(regex: RegExp, message?: string): this;
+}
 
-export interface NumberValidator {
-    min(value: number, message?: string): NumberValidator;
-    max(value: number, message?: string): NumberValidator;
-    required(message?: string): NumberValidator;
+export interface NumberValidator extends TypedValidator {
+  min(value: number, message?: string): this;
+  max(value: number, message?: string): this;
+  integer(message?: string): this;
+  positive(message?: string): this;
+  negative(message?: string): this;
+  range(min: number, max: number, message?: string): this;
+}
 
-    // Проверка на целое число ?
-    integer(message?: string): NumberValidator;
-
-    // Проверка на положительное число ?
-    positive(message?: string): NumberValidator;
-}    
-
-export interface ArrayValidator {
-    // Минимальное количество элементов
-    minItems(count: number, message?: string): ArrayValidator;
-    // Максимальное количество элементов
-    maxItems(count: number, message?: string): ArrayValidator;
-  
-    required(message?: string): ArrayValidator;
-
-}    
+export type ValidatorFn = (value: unknown) => string | null;
+export type FormFactory = (formElement: HTMLFormElement | null) => FormValidator | undefined;

@@ -7,14 +7,26 @@
   </head>
   <body>
     <main>
-      <section>
-        <form novalidate>
-          <label>Имя <input type="text" required></label>
-          <p role="alert" aria-live="assertive"></p>
-          <button type="submit">Отправить</button>
-        </form>
-      </section>
-    </main>
+        <section>
+          <form novalidate id="userForm">
+            <!-- Строковое поле -->
+            <label>
+              Имя
+              <input type="text" name="name" id="name" required />
+            </label>
+            <p id="name-error" role="alert" aria-live="assertive"></p>
+
+            <!-- Числовое поле -->
+            <label>
+              Возраст
+              <input type="number" name="age" id="age" required />
+            </label>
+            <p id="age-error" role="alert" aria-live="assertive"></p>
+
+            <button type="submit">Отправить</button>
+          </form>
+        </section>
+      </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
