@@ -1,5 +1,5 @@
 import type { FormValidator, FieldValidator, ValidationResult } from "../types/types.ts";
-import { FieldValidatorImpl } from "./FieldValidatorImpl";
+import { FieldValidatorImpl } from "./FieldValidatorImpl.ts";
 
 export class FormValidatorImpl implements FormValidator {
   private form: HTMLFormElement;

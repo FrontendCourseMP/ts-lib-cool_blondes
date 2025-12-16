@@ -1,6 +1,6 @@
 // FieldValidatorImpl.ts
-import { StringValidatorImpl } from "./StringValidatorImpl";
-import { NumberValidatorImpl } from "./NumberValidatorImpl";
+import { StringValidatorImpl } from "./StringValidatorImpl.ts";
+import { NumberValidatorImpl } from "./NumberValidatorImpl.ts";
 import type { FieldValidator, StringValidator, NumberValidator } from "../types/types.ts";
 
 export class FieldValidatorImpl implements FieldValidator {

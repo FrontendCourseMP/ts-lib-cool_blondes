@@ -1,148 +1,138 @@
-Библиотека валидации форм
+# Библиотека валидации форм ts-cool-validation
 Легковесная TypeScript библиотека для валидации HTML-форм с цепным API.
 
-Требования
-Браузерная среда (ES модули)
+### Требования
+- Браузерная среда (ES модули)
+- TypeScript
+- Форма должна существовать в DOM на момент инициализации
 
-TypeScript (рекомендуется) или JavaScript
-
-Форма должна существовать в DOM на момент инициализации
-
-Установка
-typescript
-// Импортируйте основной модуль
-import { formFactory } from './path/to/validators/FormFactory';
-Пример
-HTML:
-
-html
+### Установка
+html:
+```
 <form id="userForm">
-  <div>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email">
-    <span id="email-error" class="error"></span>
-  </div>
-  
-  <div>
-    <label for="age">Возраст:</label>
-    <input type="number" id="age" name="age">
-    <span id="age-error" class="error"></span>
-  </div>
-  
+  <input name="email" type="email" />
+  <div id="email-error" class="error"></div>
+
+  <input name="age" type="number" />
+  <div id="age-error" class="error"></div>
+
   <button type="submit">Отправить</button>
 </form>
+```
+
 JavaScript/TypeScript:
+```
+import { formFactory } from 'web-form-validator';
 
-typescript
-import { formFactory } from './validators/FormFactory';
+const validator = formFactory(document.getElementById('userForm')!);
 
-const formElement = document.getElementById('userForm') as HTMLFormElement;
-const validator = formFactory(formElement);
+validator
+  .field('email').string().required().email()
+  .field('age').number().required().min(13).max(120);
 
-// Настройка валидации
-const emailValidator = validator.field('email').string()
-  .required('Email обязателен')
-  .email('Неверный формат email');
-
-const ageValidator = validator.field('age').number()
-  .required('Возраст обязателен')
-  .min(18, 'Минимум 18 лет')
-  .max(120, 'Максимум 120 лет');
-
-// Валидация при вводе
-document.querySelectorAll('input').forEach(input => {
-  input.addEventListener('input', () => {
-    const fieldName = input.name;
-    let validator;
-    
-    if (fieldName === 'email') validator = emailValidator;
-    if (fieldName === 'age') validator = ageValidator;
-    
-    if (validator) {
-      const error = validator.validate(input.value);
-      const errorElement = document.getElementById(`${fieldName}-error`);
-      if (errorElement) {
-        errorElement.textContent = error || '';
-      }
-    }
-  });
-});
-
-// Валидация при отправке
-formElement.addEventListener('submit', (e) => {
+document.getElementById('userForm')!.addEventListener('submit', (e) => {
   e.preventDefault();
-  
-  const emailError = emailValidator.validate(
-    (formElement.elements.namedItem('email') as HTMLInputElement).value
-  );
-  const ageError = ageValidator.validate(
-    (formElement.elements.namedItem('age') as HTMLInputElement).value
-  );
-  
-  if (!emailError && !ageError) {
-    formElement.submit();
+  const result = validator.validate();
+
+  if (result.isValid) {
+    alert('Форма валидна!');
+  } else {
+    for (const [field, message] of Object.entries(result.errors)) {
+      const errorEl = document.getElementById(`${field}-error`);
+      if (errorEl) errorEl.textContent = message;
+    }
   }
 });
-API
-formFactory(formElement: HTMLFormElement | null)
+```
+
+--- 
+
+### API
+```formFactory(formElement: HTMLFormElement | null)```
 Создает валидатор формы. Возвращает undefined, если форма не найдена.
 
-validator.field(fieldName: string)
-Возвращает валидатор для конкретного поля формы.
+```validator.field(fieldName: string)```
+Начинает описание валидации для поля с указанным name.
 
-Методы валидатора полей:
-Для всех типов:
+Возвращает FieldValidator, у которого можно выбрать тип:
 
-.required(message?: string) - помечает поле как обязательное
+####  ```.string() → StringValidator```
 
-.validate(value: string): string | null - валидирует значение, возвращает ошибку или null
+- ```.required(message?: string)``` - помечает поле как обязательное
 
-StringValidator (валидатор строк):
+- ```.min(length: number, message?: string)``` - минимальная длина
 
-.string() - создает валидатор для строковых полей
+- ```.max(length: number, message?: string)``` - максимальная длина
 
-.min(length: number, message?: string) - минимальная длина
+- ```.email(message?: string)``` - проверка email формата
 
-.max(length: number, message?: string) - максимальная длина
+- ```.url(message?: string)``` - проверка URL формата
 
-.email(message?: string) - проверка email формата
+- ```.pattern(regex: RegExp, message?: string)``` - проверка по регулярному выражению
 
-.url(message?: string) - проверка URL формата
+#### ```.number() → NumberValidator```
 
-.pattern(regex: RegExp, message?: string) - проверка по регулярному выражению
+- ```.min(value: number, message?: string)``` - минимальное значение
 
-NumberValidator (валидатор чисел):
+- ```.max(value: number, message?: string)``` - максимальное значение
 
-.number() - создает валидатор для числовых полей
+- ```.integer(message?: string)``` - только целые числа
 
-.min(value: number, message?: string) - минимальное значение
+- ```.positive(message?: string)``` - только положительные числа
 
-.max(value: number, message?: string) - максимальное значение
+- ```.negative(message?: string)``` - только отрицательные числа
 
-.integer(message?: string) - только целые числа
+- ```.range(min: number, max: number, message?: string)``` - диапазон значений
 
-.positive(message?: string) - только положительные числа
+> Все методы возвращают ```this``` — можно строить цепочки.
 
-.negative(message?: string) - только отрицательные числа
+#### Два способа валидации
 
-.range(min: number, max: number, message?: string) - диапазон значений
+##### 1. Валидация всей формы — validator.validate()
 
-Особенности реализации
-Цепной API - методы можно вызывать цепочкой
+Проверяет все зарегистрированные поля и возвращает полный отчёт.
+```
+const result = validator.validate();
+// {
+//   isValid: false,
+//   errors: {
+//     email: "Неверный email",
+//     age: "Минимум 13 лет"
+//   }
+// }
+```
+> ✅ Используется при отправке формы.  
+🔑 Работает, потому что FormValidator сохраняет все созданные валидаторы полей.
 
-Ленивая валидация - проверка происходит только при вызове validate()
+##### 2. Валидация отдельного поля — fieldValidator.validate()
 
-Кастомные сообщения - все правила поддерживают собственные сообщения об ошибках
+Каждый валидатор, возвращённый из ```field()```, имеет метод ```.validate()```, который проверяет только своё поле:
+```
+const emailValidator = validator.field('email').string().email();
+// ...
+const error = emailValidator.validate(); // ← возвращает строку или null
+```
+> ✅ Используется для живой валидации (например, при input event).  
+🔑 Не требует передачи значения — поле привязано к HTMLInputElement внутри.
 
-Опциональные поля - если поле не .required(), пустые значения проходят валидацию
+#### Пример комбинированной валидации
+```
+const validator = formFactory(form);
 
-Типобезопасность - полная поддержка TypeScript
+// Сохраняем ссылки на валидаторы (опционально)
+const emailField = validator.field('email').string().email();
+const ageField = validator.field('age').number().min(13);
 
-Ограничения
-Поддерживаются только строковые и числовые поля (нет boolean, date, file)
+// Живая валидация — через отдельные валидаторы
+emailInput.addEventListener('input', () => {
+  const error = emailField.validate();
+  emailErrorEl.textContent = error || '';
+});
 
-Нет автоматической привязки к событиям формы (нужно вручную добавлять обработчики)
-
-validateField() в FormValidator еще не полностью реализован
-
-Нет встроенной групповой валидации всей формы
+// Отправка — через общую валидацию
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const result = validator.validate(); // ← проверяет и email, и age
+  if (result.isValid) { /* отправить */ }
+});
+```

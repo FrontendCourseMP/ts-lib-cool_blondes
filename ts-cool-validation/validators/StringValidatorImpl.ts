@@ -1,4 +1,4 @@
-import { BaseTypedValidator } from "./BaseTypedValidator";
+import { BaseTypedValidator } from "./BaseTypedValidator.ts";
 import type { StringValidator } from "../types/types.ts";
 
 export class StringValidatorImpl extends BaseTypedValidator implements StringValidator {

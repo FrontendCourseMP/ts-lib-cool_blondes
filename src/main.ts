@@ -1,4 +1,4 @@
-import { formFactory } from "./validators/FormFactory";
+import { formFactory } from "../ts-cool-validation/validators/FormFactory";
 
 document.addEventListener("DOMContentLoaded", () => {
   const formElement = document.getElementById("userForm") as HTMLFormElement;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formFactory } from '../validators/FormFactory';
+import { formFactory } from '../../ts-cool-validation/validators/FormFactory';
 
 function createInput(name: string, value: string = '') {
   const input = document.createElement('input');
