@@ -1,4 +1,3 @@
-// NumberValidatorImpl.ts
 import { BaseTypedValidator } from "./BaseTypedValidator";
 import type { NumberValidator } from "../types/types.ts";
 

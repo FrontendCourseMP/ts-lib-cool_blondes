@@ -1,4 +1,3 @@
-// FieldValidatorImpl.ts
 import { StringValidatorImpl } from "./StringValidatorImpl";
 import { NumberValidatorImpl } from "./NumberValidatorImpl";
 import type { FieldValidator, StringValidator, NumberValidator } from "../types/types.ts";

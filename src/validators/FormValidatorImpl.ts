@@ -1,5 +1,5 @@
 // FormValidatorImpl.ts
-import type { FormValidator, FieldValidator, ValidationResult } from "../types/types.ts";
+import type { FormValidator, FieldValidator } from "../types/types.ts";
 import { FieldValidatorImpl } from "./FieldValidatorImpl";
 
 export class FormValidatorImpl implements FormValidator {
@@ -21,9 +21,5 @@ export class FormValidatorImpl implements FormValidator {
     const input = this.form.elements.namedItem(fieldName) as HTMLInputElement | null;
     if (!input || !this.fieldInstances[fieldName]) return null;
     return null;
-  }
-
-  validate(): ValidationResult {
-    return { isValid: true, errors: {} };
   }
 }

@@ -1,4 +1,3 @@
-// BaseTypedValidator.ts
 import type { TypedValidator, ValidatorFn } from "../types/types.ts";
 
 export abstract class BaseTypedValidator implements TypedValidator {

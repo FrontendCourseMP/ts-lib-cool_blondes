@@ -1,15 +1,12 @@
-// StringValidatorImpl.ts
 import { BaseTypedValidator } from "./BaseTypedValidator";
 import type { StringValidator } from "../types/types.ts";
 
 export class StringValidatorImpl extends BaseTypedValidator implements StringValidator {
   validate(rawValue: string): string | null {
-    // Required check
     if (this.isRequired && (!rawValue || rawValue.trim() === "")) {
       return this.requiredMessage;
     }
 
-    // Even empty string (but not required) is valid as string
     const value = rawValue || "";
 
     return this.runValidators(value);

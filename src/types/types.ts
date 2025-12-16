@@ -6,7 +6,6 @@ export interface ValidationResult {
 
 export interface FormValidator {
   field(fieldName: string): FieldValidator;
-  validate(): ValidationResult;
   validateField(fieldName: string): string | null;
 }
 
