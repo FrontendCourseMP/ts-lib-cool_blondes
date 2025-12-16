@@ -6,17 +6,18 @@ export interface ValidationResult {
 
 export interface FormValidator {
   field(fieldName: string): FieldValidator;
-  validateField(fieldName: string): string | null;
+  validate(): ValidationResult;
 }
 
 export interface FieldValidator {
   string(): StringValidator;
   number(): NumberValidator;
+  validate(): string | null;
 }
 
 export interface TypedValidator {
   required(message?: string): this;
-  validate(rawValue: string): string | null;
+  validate(): string | null;
 }
 
 export interface StringValidator extends TypedValidator {

@@ -2,14 +2,23 @@ import { BaseTypedValidator } from "./BaseTypedValidator";
 import type { StringValidator } from "../types/types.ts";
 
 export class StringValidatorImpl extends BaseTypedValidator implements StringValidator {
-  validate(rawValue: string): string | null {
-    if (this.isRequired && (!rawValue || rawValue.trim() === "")) {
+  private field: HTMLInputElement;
+
+  constructor(field: HTMLInputElement) {
+    super();
+    this.field = field;
+  }
+
+  validate(): string | null {
+    const rawValue = this.field.value;
+
+    if (this.isRequired && (rawValue === "" || rawValue == null)) {
       return this.requiredMessage;
     }
 
-    const value = rawValue || "";
+    if (rawValue === "") return null;
 
-    return this.runValidators(value);
+    return this.runValidators(rawValue);
   }
 
   min(length: number, message?: string): this {

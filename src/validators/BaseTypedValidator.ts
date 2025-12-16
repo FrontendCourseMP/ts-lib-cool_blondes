@@ -19,5 +19,5 @@ export abstract class BaseTypedValidator implements TypedValidator {
     return null;
   }
 
-  abstract validate(rawValue: string): string | null;
+  abstract validate(): string | null;
 }

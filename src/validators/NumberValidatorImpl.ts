@@ -2,23 +2,30 @@ import { BaseTypedValidator } from "./BaseTypedValidator";
 import type { NumberValidator } from "../types/types.ts";
 
 export class NumberValidatorImpl extends BaseTypedValidator implements NumberValidator {
-  validate(rawValue: string): string | null {
-    if (this.isRequired && (!rawValue || rawValue.trim() === "")) {
+  private field: HTMLInputElement;
+
+  constructor(field: HTMLInputElement) {
+    super();
+    this.field = field;
+  }
+
+  validate(): string | null {
+    const rawValue = this.field.value;
+
+    if (this.isRequired && (rawValue === "" || rawValue == null)) {
       return this.requiredMessage;
     }
 
-    const num = rawValue === "" ? NaN : Number(rawValue);
+    if (rawValue === "") return null;
 
-    if (!this.isRequired && rawValue === "") {
-      return null;
-    }
-
+    const num = Number(rawValue);
     if (isNaN(num)) {
       return "Please enter a valid number";
     }
 
     return this.runValidators(num);
   }
+
 
   min(value: number, message?: string): this {
     const validator: (num: unknown) => string | null = (num) => {
